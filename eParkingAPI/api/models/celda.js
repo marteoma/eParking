@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const ZonaParqueo = mongoose.model("ZonaParqueo");
 const ObjectId = Schema.Types.ObjectId;
+require("./zonaParqueo");
 
 const Celda = new Schema(
   {
-    codigo: String,
+    codigo: {
+      type: String,
+      required: true
+    },
     zona: {
       type: ObjectId,
       ref: "ZonaParqueo",

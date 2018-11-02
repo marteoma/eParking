@@ -4,7 +4,7 @@
   "private": true,
   "config": {
     "api": {
-      "development": "http://localhost:3001/api",
+      "development": "https://arkadia-api.herokuapp.com/api",
       "production": "https://arkadia-api.herokuapp.com/api"
     }
   },
@@ -29,7 +29,8 @@
   "devDependencies": {
     "husky": "^1.1.2",
     "prettier": "^1.14.3",
-    "pretty-quick": "^1.8.0"
+    "pretty-quick": "^1.8.0",
+    "merge": ">=1.2.1"
   },
   "husky": {
     "hooks": {

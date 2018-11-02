@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const Celda = require("./celda");
 
 const ZonaParqueo = new Schema(
   {
@@ -17,7 +18,18 @@ const ZonaParqueo = new Schema(
       default: []
     }
   },
-  { collection: "ep_zonasParqueo" }
+  {
+    collection: "ep_zonasParqueo"
+  }
 );
+
+ZonaParqueo.post("findOneAndDelete", doc => {
+  Celda.deleteMany({ zona: doc._id }, err => {
+    if (err) {
+      //TODO: Mejorar el manejo de este error, y en general de todos en la aplicación
+      console.log("Error borrando celdas");
+    }
+  });
+});
 
 module.exports = mongoose.model("ZonaParqueo", ZonaParqueo);

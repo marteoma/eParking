@@ -5,8 +5,9 @@
  */
 
 var app = require('../app');
+const db = require('../db/db')
 var debug = require('debug')('eparkingapi:server');
-var http = require('http');
+// var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -15,17 +16,26 @@ var http = require('http');
 var port = normalizePort(process.env.PORT || '8085');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+// /**
+//  * Create HTTP server.
+//  */
 
-var server = http.createServer(app);
+// var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+db.then(() => {
+  console.log('Conexión a la base de datos correcta')
+})
+
+const server = app.listen(port, () => {
+  console.log('El servidor está en:')
+  console.log('http://localhost:' + app.get('port'))
+})
+
+// server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 

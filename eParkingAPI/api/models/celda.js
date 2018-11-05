@@ -13,6 +13,12 @@ const Celda = new Schema(
       type: ObjectId,
       ref: "ZonaParqueo",
       required: true
+    },
+    estado: {
+      type: String,
+      enum: ["disponible", "ocupado", "reservado"],
+      required: true,
+      default: "disponible"
     }
   },
   { collection: "ep_celdas" }

@@ -13,7 +13,7 @@ export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>I changed this message</Text>
+        <Text style={styles.welcome}>I nged this message</Text>
       </View>
     );
   }

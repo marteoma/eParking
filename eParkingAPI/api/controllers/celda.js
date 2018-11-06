@@ -36,9 +36,38 @@ function deleteById(req, res) {
   });
 }
 
+function findByZonaAndNombre(req, res) {
+  let zona = req.query.zona;
+  let nombre = req.query.nombre;
+  Celda.aggregate([
+    {
+      $lookup: {
+        from: "ep_zonasParqueo",
+        localField: "zona",
+        foreignField: "_id",
+        as: "zona_obj"
+      }
+    },
+    {
+      $match: {
+        codigo: nombre,
+        "zona_obj.0.nombre": zona
+      }
+    },
+    {
+      $project: {
+        codigo: 1
+      }
+    }
+  ]).exec((err, celdas) => {
+    utils.getResponse(res, err, celdas);
+  });
+}
+
 module.exports = {
   findAll,
   findById,
   create,
-  deleteById
+  deleteById,
+  findByZonaAndNombre
 };

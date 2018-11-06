@@ -56,6 +56,13 @@ function updateNovedades(req, res) {
   );
 }
 
+function findByNombre(req, res) {
+  let nombre = req.query.nombre;
+  ZonaParqueo.find({ nombre }, (err, zona) => {
+    utils.getResponse(res, err, zona);
+  });
+}
+
 function getCeldasByNombre(req, res) {
   let nombre = req.params.nombre;
   ZonaParqueo.aggregate([
@@ -89,5 +96,6 @@ module.exports = {
   create,
   deleteById,
   updateNovedades,
+  findByNombre,
   getCeldasByNombre
 };

@@ -12,10 +12,6 @@ const ZonaParqueo = new Schema(
     ubicacion: {
       type: String,
       required: true
-    },
-    novedades: {
-      type: Array,
-      default: []
     }
   },
   {
@@ -26,7 +22,7 @@ const ZonaParqueo = new Schema(
 ZonaParqueo.post("findOneAndDelete", doc => {
   Celda.deleteMany({ zona: doc._id }, err => {
     if (err) {
-      //TODO: Mejorar el manejo de este error, y en general de todos en la aplicación
+      //TODO: Mejorar el manejo de este error
       console.log("Error borrando celdas");
     }
   });

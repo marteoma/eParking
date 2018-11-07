@@ -8,7 +8,6 @@ router.get("/zona/:id", controller.findById);
 router.post("/zona", controller.create);
 router.delete("/zona/:id", controller.deleteById);
 router.get("/zona", controller.findByNombre);
-router.get("/zona/celdas", controller.getCeldasByNombre);
-router.get("/zona/:nombre/id", controller.getIdByNombre);
+router.get("/zona/celdas/all", controller.getCeldasByNombre);
 
 module.exports = router;

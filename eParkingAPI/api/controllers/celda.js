@@ -1,5 +1,5 @@
 const Celda = require("../models/celda");
-const Novedad = require("./novedad");
+const Novedad = require("../models/novedad");
 const ZonaController = require("./zonaParqueo");
 
 /*********************************
@@ -11,6 +11,7 @@ const ZonaController = require("./zonaParqueo");
 function findAll(req, res, next) {
   Celda.find({}, (err, celdas) => {
     if (err) next(err);
+    if (!celdas || !celdas.length) next(new Error("No se encontraron datos"));
     else res.send(celdas);
   });
 }
@@ -20,19 +21,9 @@ function findById(req, res, next) {
   let id = req.params.id;
   Celda.findById(id, (err, celda) => {
     if (err) next(err);
+    if (!celda) next(new Error("No se encontraron celdas para ese id"));
     else res.send(celda);
   });
-}
-
-/**
- * Método en evaluación de si ser usado o no
- */
-function createByZonaId(req, res, next) {
-  let newCelda = new Celda({
-    codigo: req.body.codigo,
-    zona: req.body.zona
-  });
-  newCelda.save((err, celda) => {});
 }
 
 //Probada
@@ -45,6 +36,7 @@ function createByZonaNombre(req, res, next) {
       });
       newCelda.save((err, celda) => {
         if (err) next(err);
+        if (!celda) next(new Error("La celda no se salvó correctamente"));
         else res.send(celda);
       });
     })
@@ -56,9 +48,10 @@ function createByZonaNombre(req, res, next) {
 //Probada
 function deleteById(req, res, next) {
   let id = req.params.id;
-  Celda.findOneAndDelete(id, (err, celda) => {
+  Celda.findByIdAndDelete(id, (err, celda) => {
     if (err) next(err);
-    res.send(celda);
+    if (!celda) next(new Error("No se encontraron celdas con ese id"));
+    else res.send(celda);
   });
 }
 
@@ -93,10 +86,13 @@ function findByZonaAndNombre(req, res, next) {
     }
   ]).exec((err, celdas) => {
     if (err) next(err);
+    if (!celdas || !celdas.length)
+      next(new Error("No se encontraron celdas para esos datos"));
     else res.send(celdas);
   });
 }
 
+//Probada
 function changeNovedad(req, res, next) {
   ZonaController.getIdByNombre(req.body.zona)
     .then(id => {
@@ -110,6 +106,36 @@ function changeNovedad(req, res, next) {
         { new: true },
         (err, celda) => {
           if (err) next(err);
+          if (!celda)
+            next(
+              new Error("No se encontraron datos para actualizar la novedad")
+            );
+          else res.send(celda);
+        }
+      );
+    })
+    .catch(err => {
+      next(err);
+    });
+}
+
+//Probada
+function deleteNovedad(req, res, next) {
+  ZonaController.getIdByNombre(req.body.zona)
+    .then(id => {
+      let query = { zona: id, codigo: req.body.nombre };
+      let novedad = {
+        descripcion: "Sin novedades",
+        activa: false
+      };
+      Celda.findOneAndUpdate(
+        query,
+        { novedad, estado: "disponible" },
+        { new: true },
+        (err, celda) => {
+          if (err) next(err);
+          if (!celda)
+            next(new Error("No se encontraron datos para borrar novedad"));
           else res.send(celda);
         }
       );
@@ -125,5 +151,6 @@ module.exports = {
   createByZonaNombre,
   deleteById,
   findByZonaAndNombre,
-  changeNovedad
+  changeNovedad,
+  deleteNovedad
 };

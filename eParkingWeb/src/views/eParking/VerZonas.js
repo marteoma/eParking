@@ -4,6 +4,7 @@ import SimpleTable from "../../components/SimpleTable";
 import Typography from "@material-ui/core/Typography";
 
 import PACKAGE from "../../../package.json";
+import KEY from "./config";
 
 const API_URL = PACKAGE.config.api[process.env.NODE_ENV];
 
@@ -23,7 +24,7 @@ class VerZonas extends Component {
   }
 
   getZonas() {
-    axios.get(`${API_URL}/zonaParqueo/`).then(res => {
+    axios.get(`${KEY.apiURL}/ep_zonasParqueo/`).then(res => {
       const { data } = res;
 
       this.setState({

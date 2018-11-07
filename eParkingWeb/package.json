@@ -1,25 +1,40 @@
 {
-  "name": "eparkingweb",
+  "name": "arkadia",
   "version": "0.1.0",
   "private": true,
+  "config": {
+    "api": {
+      "development": "https://arkadia-api.herokuapp.com/api",
+      "production": "https://arkadia-api.herokuapp.com/api"
+    }
+  },
   "dependencies": {
+    "@material-ui/core": "^3.2.0",
+    "@material-ui/icons": "^3.0.1",
+    "ajv": "^6.5.4",
+    "axios": "^0.18.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts": "2.0.5"
+    "react-router-dom": "^4.3.1",
+    "react-scripts": "1.1.5",
+    "recharts": "^1.3.3"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "react-scripts build && cp build/index.html build/200.html",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "pretty": "prettier --single-quote --trailing-comma es5 --semi=false --write \"src/**/*.js\""
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "devDependencies": {
+    "husky": "^1.1.2",
+    "prettier": "^1.14.3",
+    "pretty-quick": "^1.8.0",
+    "merge": ">=1.2.1"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
 }

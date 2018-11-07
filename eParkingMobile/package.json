@@ -1,16 +1,29 @@
 {
-  "name": "empty-project-template",
-  "main": "node_modules/expo/AppEntry.js",
+  "name": "eparkingmobile",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "eject": "expo eject"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
   },
   "dependencies": {
-    "expo": "^30.0.1",
-    "react": "16.3.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz"
+    "axios": "^0.18.0",
+    "react": "16.6.0-alpha.8af6728",
+    "react-native": "0.57.3",
+<<<<<<< HEAD
+    "react-native-public-ip": "^1.0.1"
+=======
+    "react-navigation": "^2.18.2"
+>>>>>>> b279a6c393bd65371a01d61957bb3b6ebe7865aa
+  },
+  "devDependencies": {
+    "babel-jest": "23.6.0",
+    "jest": "23.6.0",
+    "metro-react-native-babel-preset": "0.48.1",
+    "react-test-renderer": "16.6.0-alpha.8af6728",
+    "merge": ">=1.2.1"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }

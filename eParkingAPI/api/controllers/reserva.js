@@ -1,40 +1,107 @@
 const Reserva = require("../models/reserva");
-const utils = require("../../handlers/utils");
+const CeldaController = require("./celda");
 
 /*********************************
  * Los métodos a continuación son de CRUD, tienen un funcionamiento igual
  * en todos los controladores y deberían dejarse
  *********************************/
 
-function findAll(req, res) {
+//Probado
+function findAll(req, res, next) {
   Reserva.find({}, (err, reservas) => {
-    utils.getResponse(res, err, reservas);
+    if (err) next(err);
+
+    if (!reservas || !reservas.length)
+      next(new Error("No se encontraron reservas"));
+    else res.send(reservas);
   });
 }
 
-function findById(req, res) {
+//Probada
+function findById(req, res, next) {
   let id = req.params.id;
   Reserva.findById(id, (err, reserva) => {
-    utils.getResponse(res, err, reserva);
+    if (err) next(err);
+
+    if (!reserva) next(new Error("La reserva no se encontró"));
+    else res.send(reserva);
   });
 }
 
-function create(req, res) {
-  let newReserva = new Reserva({
-    celda: req.body.celda,
-    usuario: req.body.usuario,
-    fecha: req.body.fecha
-  });
-  newReserva.save((err, reserva) => {
-    utils.simpleResponse(res, err, reserva);
-  });
+//Probada
+function create(req, res, next) {
+  let zona = req.body.zona;
+  let celda = req.body.celda;
+  let usuario = req.body.usuario;
+  CeldaController.getCeldaByData(zona, celda)
+    .then(celda => {
+      const newReserva = new Reserva({
+        celda: celda._id,
+        usuario: usuario
+      });
+      newReserva.save((err, reserva) => {
+        if (err) next(err);
+
+        if (!reserva)
+          next(new Error("La reserva no se guardó satisfactoriamente"));
+        else {
+          CeldaController.changeEstado(celda._id, "reservado")
+            .then(celda => {
+              res.send({ reserva, celda });
+            })
+            .catch(err => {
+              next(err);
+            });
+        }
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
 }
 
-function deleteById(req, res) {
+function deleteById(req, res, next) {
   let id = req.params.id;
   Reserva.findOneAndDelete(id, (err, reserva) => {
-    utils.getResponse(res, err, reserva);
+    if (err) next(err);
+
+    if (!reserva) next(new Error("La reserva no se encontró"));
+    else {
+      {
+        CeldaController.changeEstado(id, "disponible")
+          .then(celda => {
+            res.send({ reserva, celda });
+          })
+          .catch(err => {
+            next(err);
+          });
+      }
+    }
   });
+}
+
+//Probada
+function terminarReserva(req, res, next) {
+  let id = req.params.id;
+  Reserva.findByIdAndUpdate(
+    id,
+    { activa: false },
+    { new: true },
+    (err, reserva) => {
+      if (err) next(err);
+
+      if (!reserva) next(new Error("La reserva no se encontró"));
+      else {
+        CeldaController.changeEstado(id, "disponible")
+          .then(celda => {
+            res.send({ reserva, celda });
+          })
+          .catch(err => {
+            next(err);
+          });
+      }
+    }
+  );
 }
 
 /*********************************
@@ -46,5 +113,6 @@ module.exports = {
   findAll,
   findById,
   create,
-  deleteById
+  deleteById,
+  terminarReserva
 };

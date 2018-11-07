@@ -16,7 +16,7 @@ const Celda = new Schema(
     },
     estado: {
       type: String,
-      enum: ["disponible", "ocupado", "reservado"],
+      enum: ["disponible", "ocupado", "reservado", "novedad"],
       required: true,
       default: "disponible"
     }

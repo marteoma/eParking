@@ -11,7 +11,7 @@ export default class ZonaItem extends Component {
       <TouchableOpacity onPress={this._onPressButton} underlayColor="white">
         <View style={styles.wrapper}>
           <Text style={styles.item}>
-            {this.props.name.toUpperCase().replace("_", " ")}
+            {this.props.name.toUpperCase().replace(/_/g, " ")}
           </Text>
         </View>
       </TouchableOpacity>

@@ -10,13 +10,13 @@ const Reserva = new Schema(
       ref: "Celda",
       type: ObjectId
     },
-    user: {
+    usuario: {
       required: true,
       type: String
     },
-    fecha: {
-      required: true,
-      type: Date
+    activa: {
+      type: Boolean,
+      default: true
     }
   },
   { collection: "ep_reservas" }

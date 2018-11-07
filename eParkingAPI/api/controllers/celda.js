@@ -60,36 +60,66 @@ function deleteById(req, res, next) {
  * Son creados según las funcionalidades de las aplicaciones
  *********************************/
 
+/**
+ * Obtiene una celda a partir de su zona y su nombre
+ * @param {String} zona Nombre de la zona
+ * @param {String} nombre Nombre de la celda
+ */
+function getCeldaByData(zona, nombre) {
+  return new Promise((resolve, reject) => {
+    Celda.aggregate([
+      {
+        $lookup: {
+          from: "ep_zonasParqueo",
+          localField: "zona",
+          foreignField: "_id",
+          as: "zona_obj"
+        }
+      },
+      {
+        $match: {
+          codigo: nombre,
+          "zona_obj.0.nombre": zona
+        }
+      },
+      {
+        $project: {
+          codigo: 1
+        }
+      }
+    ]).exec((err, celdas) => {
+      if (err) reject(err);
+
+      if (!celdas || !celdas.length)
+        reject(new Error("No se encontró celda con esos datos"));
+      else resolve(celdas[0]);
+    });
+  });
+}
+
+function changeEstado(id, estado) {
+  return new Promise((resolve, reject) => {
+    Celda.findByIdAndUpdate(id, { estado }, { new: true }, (err, celda) => {
+      if (err) reject(err);
+      //TODO: ARREGLAR FUNCIONAMIENTO CON TERMINAR RESERVA
+      if (!celda) reject(new Error("No se actualizó correctamente"));
+      else resolve(celda);
+    });
+  });
+}
+
 //Probada
 function findByZonaAndNombre(req, res, next) {
   let zona = req.query.zona;
   let nombre = req.query.nombre;
-  Celda.aggregate([
-    {
-      $lookup: {
-        from: "ep_zonasParqueo",
-        localField: "zona",
-        foreignField: "_id",
-        as: "zona_obj"
-      }
-    },
-    {
-      $match: {
-        codigo: nombre,
-        "zona_obj.0.nombre": zona
-      }
-    },
-    {
-      $project: {
-        codigo: 1
-      }
-    }
-  ]).exec((err, celdas) => {
-    if (err) next(err);
-    if (!celdas || !celdas.length)
-      next(new Error("No se encontraron celdas para esos datos"));
-    else res.send(celdas);
-  });
+
+  getCeldaByData(zona, nombre)
+    .then(celda => {
+      res.send(celda);
+    })
+    .catch(err => {
+      next(err);
+    });
 }
 
 //Probada
@@ -152,5 +182,7 @@ module.exports = {
   deleteById,
   findByZonaAndNombre,
   changeNovedad,
-  deleteNovedad
+  deleteNovedad,
+  getCeldaByData,
+  changeEstado
 };

@@ -114,7 +114,7 @@ function getIdByNombre(nombre) {
       if (err) reject(err);
 
       if (!zonas || !zonas.length)
-        reject(new Error("No se econctró el id de esa zona"));
+        reject(new Error("No se encontró el id de esa zona"));
       else resolve(zonas[0]._id);
     });
   });

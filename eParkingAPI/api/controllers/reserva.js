@@ -1,39 +1,42 @@
 const Reserva = require("../models/reserva");
-const utils = require("../../handlers/utils");
 
 /*********************************
  * Los métodos a continuación son de CRUD, tienen un funcionamiento igual
  * en todos los controladores y deberían dejarse
  *********************************/
 
-function findAll(req, res) {
+function findAll(req, res, next) {
   Reserva.find({}, (err, reservas) => {
-    utils.getResponse(res, err, reservas);
+    if (err) next(err);
+    res.send(reservas);
   });
 }
 
-function findById(req, res) {
+function findById(req, res, next) {
   let id = req.params.id;
   Reserva.findById(id, (err, reserva) => {
-    utils.getResponse(res, err, reserva);
+    if (err) next(err);
+    res.send(reserva);
   });
 }
 
-function create(req, res) {
+function create(req, res, next) {
   let newReserva = new Reserva({
     celda: req.body.celda,
     usuario: req.body.usuario,
     fecha: req.body.fecha
   });
   newReserva.save((err, reserva) => {
-    utils.simpleResponse(res, err, reserva);
+    if (err) next(err);
+    res.send(reserva);
   });
 }
 
-function deleteById(req, res) {
+function deleteById(req, res, next) {
   let id = req.params.id;
   Reserva.findOneAndDelete(id, (err, reserva) => {
-    utils.getResponse(res, err, reserva);
+    if (err) next(err);
+    res.send(reserva);
   });
 }
 

@@ -15,4 +15,10 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(router);
 
+app.use((err, req, res, next) => {
+  // console.error("Error de servidor", error)
+  res.status(500).send(`Error de servidor: ${err}`);
+  //TODO: Personalizar según error
+});
+
 module.exports = app;

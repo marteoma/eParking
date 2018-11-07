@@ -1,41 +1,41 @@
-// const mongoose = require("mongoose")
-// const Schema = mongoose.Schema
-// const ObjectId = Schema.Types.ObjectId
 const ZonaParqueo = require("../models/zonaParqueo");
-const utils = require("../../handlers/utils");
 
 /*********************************
  * Los métodos a continuación son de CRUD, tienen un funcionamiento igual
  * en todos los controladores y deberían dejarse
  *********************************/
 
-function findAll(req, res) {
+function findAll(req, res, next) {
   ZonaParqueo.find({}, (err, zonas) => {
-    utils.getResponse(res, err, zonas);
+    if (err) next(err);
+    res.send(zonas);
   });
 }
 
-function findById(req, res) {
+function findById(req, res, next) {
   let id = req.params.id;
   ZonaParqueo.findById(id, (err, zona) => {
-    utils.getResponse(res, err, zona);
+    if (err) next(err);
+    res.send(zona);
   });
 }
 
-function create(req, res) {
+function create(req, res, next) {
   const newZonaParqueo = new ZonaParqueo({
     nombre: req.body.nombre.toLowerCase().replace(" ", "_"),
     ubicacion: req.body.ubicacion
   });
   newZonaParqueo.save((err, zona) => {
-    utils.simpleResponse(res, err, zona);
+    if (err) next(err);
+    res.send(zona);
   });
 }
 
-function deleteById(req, res) {
+function deleteById(req, res, next) {
   let id = req.params.id;
   ZonaParqueo.findByIdAndDelete(id, (err, zona) => {
-    utils.getResponse(res, err, zona);
+    if (err) next(err);
+    res.send(zona);
   });
 }
 
@@ -44,27 +44,16 @@ function deleteById(req, res) {
  * Son creados según las funcionalidades de las aplicaciones
  *********************************/
 
-function updateNovedades(req, res) {
-  let id = req.params.id;
-  ZonaParqueo.findByIdAndUpdate(
-    id,
-    { $push: { novedades: req.body.novedad } },
-    { new: true, upsert: true },
-    (err, zona) => {
-      utils.getResponse(res, err, zona);
-    }
-  );
-}
-
-function findByNombre(req, res) {
+function findByNombre(req, res, next) {
   let nombre = req.query.nombre;
   ZonaParqueo.find({ nombre }, (err, zona) => {
-    utils.getResponse(res, err, zona);
+    if (err) next(err);
+    res.send(zona);
   });
 }
 
-function getCeldasByNombre(req, res) {
-  let nombre = req.params.nombre;
+function getCeldasByNombre(req, res, next) {
+  let nombre = req.query.nombre;
   ZonaParqueo.aggregate([
     {
       $lookup: {
@@ -81,12 +70,25 @@ function getCeldasByNombre(req, res) {
     },
     {
       $project: {
-        celdas: 1,
-        _id: 0
+        celdas: 1
       }
     }
   ]).exec((err, celdas) => {
-    utils.getResponse(res, err, celdas);
+    if (err) next(err);
+    res.send(celdas);
+  });
+}
+
+/**
+ * Devuele una promesa con el id de la celda buscada
+ * @param {String} nombre Nombre de la zona que estoy buscando
+ */
+function getIdByNombre(nombre) {
+  return new Promise((resolve, reject) => {
+    ZonaParqueo.find({ nombre }, { _id: 1 }, (err, id) => {
+      if (err) reject(err);
+      else resolve(id[0]._id);
+    });
   });
 }
 
@@ -95,7 +97,7 @@ module.exports = {
   findById,
   create,
   deleteById,
-  updateNovedades,
   findByNombre,
-  getCeldasByNombre
+  getCeldasByNombre,
+  getIdByNombre
 };

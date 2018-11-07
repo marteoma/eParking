@@ -3,11 +3,11 @@ const controller = require("../controllers/zonaParqueo");
 
 const router = express.Router();
 
-router.get("/zona", controller.findAll);
-router.get("/zona/:id", controller.deleteById);
+router.get("/zona/all", controller.findAll);
+router.get("/zona/:id", controller.findById);
 router.post("/zona", controller.create);
-router.put("/zona/:id", controller.updateNovedades);
 router.delete("/zona/:id", controller.deleteById);
-router.get("/zona/:nombre/celdas", controller.getCeldasByNombre);
+router.get("/zona", controller.findByNombre);
+router.get("/zona/celdas/all", controller.getCeldasByNombre);
 
 module.exports = router;

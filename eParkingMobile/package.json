@@ -10,11 +10,7 @@
     "axios": "^0.18.0",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
-<<<<<<< HEAD
-    "react-native-public-ip": "^1.0.1"
-=======
     "react-navigation": "^2.18.2"
->>>>>>> b279a6c393bd65371a01d61957bb3b6ebe7865aa
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
   View,
   FlatList,
+  Text,
   ActivityIndicator,
   StyleSheet,
   ScrollView
@@ -9,7 +10,6 @@ import {
 import ZonaItem from "./ZonaItem";
 import constantes from "../api/constants";
 import axios from "axios";
-import publicIP from 'react-native-public-ip';
 
 export default class ZonasView extends Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export default class ZonasView extends Component {
  
   componentDidMount() {
     return axios
-      .get(`${constantes.apiUrl}/zona`)
+      .get(`${constantes.apiUrl}/zona/all`)
       .then(response => {
         this.setState({
           isLoading: false,
@@ -33,28 +33,6 @@ export default class ZonasView extends Component {
   }
 
   render() {
-    here = 0;
-  publicIP()
-    .then(ip => {
-      console.log(ip);
-      here = ip;
-      // '47.122.71.234'
-    })
-    .catch(error => {
-      console.log(error);
-      // 'Unable to get IP address.'
-  });
-
-    if (this.state.isLoading) {
-      return (
-         
-        <View style={{ flex: 1, padding: 20 }}>
-          <ActivityIndicator />        
-          <Text>${here}</Text> 
-        </View>
-      );
-    }
-
     return (
       <ScrollView style={styles.container}>
         <FlatList

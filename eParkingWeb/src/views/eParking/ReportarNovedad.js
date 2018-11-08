@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Snackbar from "@material-ui/core/Snackbar";
-import PACKAGE from "../../../package.json";
+import KEY from "./config";
 
 const styles = theme => ({
   layout: {
@@ -46,13 +46,56 @@ const styles = theme => ({
 });
 
 class ReportarNovedad extends Component {
-  crearNovedad(e) {}
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      zona: "",
+      celda: "",
+      novedad: "",
+      open: false
+    };
+
+    this.crearNovedad = this.crearNovedad.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleClose() {
+    this.setState({ open: false });
+  }
+
+  crearNovedad(e) {
+    e.preventDefault();
+    let thisComponent = this;
+    console.log(this);
+
+    axios
+      .put(`${KEY.apiURL}/novedad/`, {
+        zona: this.state.zona,
+        nombre: this.state.celda,
+        descripcion: this.state.novedad
+      })
+      .then(res => {
+        thisComponent.setState({
+          zona: "",
+          celda: "",
+          novedad: "",
+          open: true
+        });
+      });
+  }
 
   render() {
     const { classes } = this.props;
 
     return (
       <Fragment>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={this.state.open}
+          onClose={this.handleClose}
+          message={<span id="message-id">Novedad reportada con exito</span>}
+        />
         <CssBaseline />
         <main className={classes.layout}>
           <Paper className={classes.paper}>
@@ -66,8 +109,8 @@ class ReportarNovedad extends Component {
                   id="zona"
                   name="zona"
                   autoFocus
-                  //   value={this.state.zona}
-                  //   onChange={e => this.setState({ zona: e.target.value })}
+                  value={this.state.zona}
+                  onChange={e => this.setState({ zona: e.target.value })}
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
@@ -75,8 +118,8 @@ class ReportarNovedad extends Component {
                 <Input
                   id="celda"
                   name="celda"
-                  //   value={this.state.celda}
-                  //   onChange={e => this.setState({ celda: e.target.value })}
+                  value={this.state.celda}
+                  onChange={e => this.setState({ celda: e.target.value })}
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
@@ -85,13 +128,16 @@ class ReportarNovedad extends Component {
                 </label>
                 <textarea
                   id="novedad"
+                  name="novedad"
+                  value={this.state.novedad}
+                  onChange={e => this.setState({ novedad: e.target.value })}
                   class="mdc-text-field__input"
                   rows="8"
                   cols="40"
                 />
               </FormControl>
               <Button
-                type="submit"
+                type="button"
                 fullWidth
                 variant="contained"
                 color="primary"

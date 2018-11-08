@@ -11,8 +11,7 @@ import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Snackbar from "@material-ui/core/Snackbar";
 import PACKAGE from "../../../package.json";
-
-const API_URL = PACKAGE.config.api[process.env.NODE_ENV];
+import KEY from "./config";
 
 const styles = theme => ({
   layout: {
@@ -69,7 +68,7 @@ class GestionarZona extends Component {
     e.preventDefault();
 
     axios
-      .post(`${API_URL}/zonaParqueo/`, {
+      .post(`${KEY.apiURL}/zona/`, {
         nombre: this.state.nombre,
         ubicacion: this.state.ubicacion
       })

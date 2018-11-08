@@ -18,6 +18,9 @@ const getUrl = nombre => {
     case "Ver zonas de parqueo":
       url = "/eParking/verZonas";
       break;
+    case "Reportar novedad":
+      url = "/eParking/ReportarNovedad";
+      break;
   }
   return url;
 };

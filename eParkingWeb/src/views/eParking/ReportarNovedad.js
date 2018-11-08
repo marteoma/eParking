@@ -52,18 +52,37 @@ class ReportarNovedad extends Component {
     this.state = {
       zona: "",
       celda: "",
-      novedad: ""
+      novedad: "",
+      open: false
     };
+
+    this.crearNovedad = this.crearNovedad.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleClose() {
+    this.setState({ open: false });
   }
 
   crearNovedad(e) {
+    e.preventDefault();
     let thisComponent = this;
+    console.log(this);
 
-    axios.get(`${KEY.apiURL}/zona`).then(res => {
-      thisComponent.setState({
-        res
+    axios
+      .put(`${KEY.apiURL}/novedad/`, {
+        zona: this.state.zona,
+        nombre: this.state.celda,
+        descripcion: this.state.novedad
+      })
+      .then(res => {
+        thisComponent.setState({
+          zona: "",
+          celda: "",
+          novedad: "",
+          open: true
+        });
       });
-    });
   }
 
   render() {
@@ -71,6 +90,12 @@ class ReportarNovedad extends Component {
 
     return (
       <Fragment>
+        <Snackbar
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          open={this.state.open}
+          onClose={this.handleClose}
+          message={<span id="message-id">Novedad reportada con exito</span>}
+        />
         <CssBaseline />
         <main className={classes.layout}>
           <Paper className={classes.paper}>
@@ -103,19 +128,16 @@ class ReportarNovedad extends Component {
                 </label>
                 <textarea
                   id="novedad"
+                  name="novedad"
+                  value={this.state.novedad}
+                  onChange={e => this.setState({ novedad: e.target.value })}
                   class="mdc-text-field__input"
                   rows="8"
                   cols="40"
                 />
-                <Input
-                  id="novedad"
-                  name="novedad"
-                  value={this.state.novedad}
-                  onChange={e => this.setState({ novedad: e.target.value })}
-                />
               </FormControl>
               <Button
-                type="submit"
+                type="button"
                 fullWidth
                 variant="contained"
                 color="primary"

@@ -24,7 +24,7 @@ class VerZonas extends Component {
   }
 
   getZonas() {
-    axios.get(`${KEY.apiURL}/ep_zonasParqueo/`).then(res => {
+    axios.get(`${KEY.apiURL}/zona/all`).then(res => {
       const { data } = res;
 
       this.setState({

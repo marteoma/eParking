@@ -5,35 +5,37 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
-  TouchableOpacity
+  Text
 } from "react-native";
-import ZonaItem from "./ZonaItem";
+import CeldaItem from "./CeldaItem";
 import constantes from "../api/constants";
 import axios from "axios";
 
-export default class ZonasView extends Component {
+export default class CeldasView extends Component {
   constructor(props) {
     super(props);
     this.state = { isLoading: true };
-    // this._onPressButton = this._onPressButton.bind(this)
   }
 
   componentDidMount() {
+    const { navigation } = this.props;
+    const zona = navigation.getParam("zona", "NO-ID");
+
     return axios
-      .get(`${constantes.apiUrl}/zona/all`)
+      .get(`${constantes.apiUrl}/zona/celdas/all?nombre=${zona}`)
       .then(response => {
+        console.log(response.data);
         this.setState({
           isLoading: false,
           dataSource: response.data
         });
       })
       .catch(error => {
-        console.error(error);
+        this.setState({
+          isLoading: false,
+          dataSource: ["No se encontraron celdas disponibles"]
+        });
       });
-  }
-
-  _onPressButton(zona) {
-    this.props.navigation.navigate("Celdas", { zona: "parque_norte" });
   }
 
   render() {
@@ -49,14 +51,7 @@ export default class ZonasView extends Component {
       <ScrollView style={styles.container}>
         <FlatList
           data={this.state.dataSource}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => this._onPressButton(item.nombre)}
-              underlayColor="white"
-            >
-              <ZonaItem zona={item} />
-            </TouchableOpacity>
-          )}
+          renderItem={({ item }) => <CeldaItem celda={item} />}
           keyExtractor={item => item._id}
         />
       </ScrollView>
@@ -66,7 +61,6 @@ export default class ZonasView extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: "#F5FCFF"
   }
 });

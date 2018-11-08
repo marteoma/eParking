@@ -5,10 +5,8 @@ export default class ZonaItem extends Component {
   render() {
     return (
       <View style={styles.wrapper}>
-        <Text style={styles.item_main}>
-          {this.props.zona.nombre.toUpperCase().replace(/_/g, " ")}
-        </Text>
-        <Text style={styles.item_sub}>{this.props.zona.ubicacion}</Text>
+        <Text style={styles.item_main}>{this.props.celda.codigo}</Text>
+        <Text style={styles.item_sub}>{this.props.celda.estado}</Text>
       </View>
     );
   }

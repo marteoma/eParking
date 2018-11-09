@@ -1,3 +1,3 @@
 export default {
-  apiURL: "http://localhost:8085/api"
+  apiURL: "https://eparking-api.herokuapp.com/api"
 };

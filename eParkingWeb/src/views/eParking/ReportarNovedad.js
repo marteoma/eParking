@@ -1,6 +1,5 @@
 import React, { Fragment, Component } from "react";
 import axios from "axios";
-import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControl from "@material-ui/core/FormControl";
@@ -45,17 +44,18 @@ const styles = theme => ({
   }
 });
 
-class GestionarZona extends Component {
+class ReportarNovedad extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      nombre: "",
-      ubicacion: "",
+      zona: "",
+      celda: "",
+      novedad: "",
       open: false
     };
 
-    this.crearZona = this.crearZona.bind(this);
+    this.crearNovedad = this.crearNovedad.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
@@ -63,18 +63,22 @@ class GestionarZona extends Component {
     this.setState({ open: false });
   }
 
-  crearZona(e) {
+  crearNovedad(e) {
     e.preventDefault();
+    let thisComponent = this;
+    console.log(this);
 
     axios
-      .post(`${KEY.apiURL}/zona/`, {
-        nombre: this.state.nombre,
-        ubicacion: this.state.ubicacion
+      .put(`${KEY.apiURL}/novedad/`, {
+        zona: this.state.zona,
+        nombre: this.state.celda,
+        descripcion: this.state.novedad
       })
       .then(res => {
-        this.setState({
-          nombre: "",
-          ubicacion: "",
+        thisComponent.setState({
+          zona: "",
+          celda: "",
+          novedad: "",
           open: true
         });
       });
@@ -89,43 +93,57 @@ class GestionarZona extends Component {
           anchorOrigin={{ vertical: "top", horizontal: "right" }}
           open={this.state.open}
           onClose={this.handleClose}
-          message={<span id="message-id">Zona creada con exito</span>}
+          message={<span id="message-id">Novedad reportada con exito</span>}
         />
         <CssBaseline />
         <main className={classes.layout}>
           <Paper className={classes.paper}>
             <Typography component="h1" variant="h5">
-              Zona
+              Reportar novedad
             </Typography>
             <form className={classes.form}>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="name">Nombre</InputLabel>
+                <InputLabel htmlFor="zona">Zona</InputLabel>
                 <Input
-                  id="name"
-                  name="nombre"
+                  id="zona"
+                  name="zona"
                   autoFocus
-                  value={this.state.nombre}
-                  onChange={e => this.setState({ nombre: e.target.value })}
+                  value={this.state.zona}
+                  onChange={e => this.setState({ zona: e.target.value })}
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="ubicacion">Ubicación</InputLabel>
+                <InputLabel htmlFor="celda">Celda</InputLabel>
                 <Input
-                  id="ubicacion"
-                  name="ubicacion"
-                  value={this.state.ubicacion}
-                  onChange={e => this.setState({ ubicacion: e.target.value })}
+                  id="celda"
+                  name="celda"
+                  value={this.state.celda}
+                  onChange={e => this.setState({ celda: e.target.value })}
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <label for="textarea" class="mdc-floating-label">
+                  Descripcion de la novedad
+                </label>
+                <textarea
+                  id="novedad"
+                  name="novedad"
+                  value={this.state.novedad}
+                  onChange={e => this.setState({ novedad: e.target.value })}
+                  class="mdc-text-field__input"
+                  rows="8"
+                  cols="40"
                 />
               </FormControl>
               <Button
-                type="submit"
+                type="button"
                 fullWidth
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={this.crearZona}
+                onClick={this.crearNovedad}
               >
-                Crear Zona
+                Crear Novedad
               </Button>
             </form>
           </Paper>
@@ -135,8 +153,4 @@ class GestionarZona extends Component {
   }
 }
 
-GestionarZona.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(GestionarZona);
+export default withStyles(styles)(ReportarNovedad);

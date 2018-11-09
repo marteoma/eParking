@@ -15,7 +15,6 @@ export default class ZonasView extends Component {
   constructor(props) {
     super(props);
     this.state = { isLoading: true };
-    // this._onPressButton = this._onPressButton.bind(this)
   }
 
   componentDidMount() {
@@ -33,8 +32,12 @@ export default class ZonasView extends Component {
   }
 
   _onPressButton(zona) {
-    this.props.navigation.navigate("Celdas", { zona: "parque_norte" });
+    this.props.navigation.navigate("Celdas", { zona });
   }
+
+  static navigationOptions = {
+    title: "Zonas"
+  };
 
   render() {
     if (this.state.isLoading) {

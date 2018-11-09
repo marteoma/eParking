@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
 import { createStackNavigator } from "react-navigation";
 import ZonasView from "./src/components/ZonasView";
 import CeldasView from "./src/components/CeldasView";
+import ReservarForm from "./src/components/ReservarForm";
 
 const RootStack = createStackNavigator(
   {
     Zonas: ZonasView,
-    Celdas: CeldasView
+    Celdas: CeldasView,
+    Reservar: ReservarForm
   },
   {
     initialRouteName: "Zonas"

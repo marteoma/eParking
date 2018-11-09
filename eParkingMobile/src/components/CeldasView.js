@@ -5,11 +5,36 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
-  Text
+  Alert,
+  TouchableOpacity
 } from "react-native";
 import CeldaItem from "./CeldaItem";
+import { setJSExceptionHandler } from "react-native-exception-handler";
 import constantes from "../api/constants";
 import axios from "axios";
+
+const exceptionhandler = (error, isFatal) => {
+  if (isFatal) {
+    Alert.alert(
+      "Unexpected error occurred",
+      `
+        Error: ${isFatal ? "Fatal:" : ""} ${e.name} ${e.message}
+        We will need to restart the app.
+        `,
+      [
+        {
+          text: "Restart",
+          onPress: () => {
+            RNRestart.Restart();
+          }
+        }
+      ]
+    );
+  } else {
+    Alert.alert("No se encontraron celdas disponibles");
+  }
+};
+setJSExceptionHandler(exceptionhandler, false);
 
 export default class CeldasView extends Component {
   constructor(props) {
@@ -31,12 +56,19 @@ export default class CeldasView extends Component {
         });
       })
       .catch(error => {
-        this.setState({
-          isLoading: false,
-          dataSource: ["No se encontraron celdas disponibles"]
-        });
+        console.error(error);
       });
   }
+
+  _onPressButton(celda) {
+    const { navigation } = this.props;
+    const zona = navigation.getParam("zona", "NO-ID");
+    navigation.navigate("Reservar", { zona, celda });
+  }
+
+  static navigationOptions = {
+    title: "Celdas"
+  };
 
   render() {
     if (this.state.isLoading) {
@@ -51,7 +83,14 @@ export default class CeldasView extends Component {
       <ScrollView style={styles.container}>
         <FlatList
           data={this.state.dataSource}
-          renderItem={({ item }) => <CeldaItem celda={item} />}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => this._onPressButton(item.codigo)}
+              underlayColor="white"
+            >
+              <CeldaItem celda={item} />
+            </TouchableOpacity>
+          )}
           keyExtractor={item => item._id}
         />
       </ScrollView>

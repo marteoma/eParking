@@ -10,8 +10,10 @@
     "axios": "^0.18.0",
     "react": "16.6.0-alpha.8af6728",
     "react-native": "0.57.3",
+    "react-native-exception-handler": "^2.10.2",
     "react-native-public-ip": "^1.0.1",
-    "react-navigation": "^2.18.2"
+    "react-navigation": "^2.18.2",
+    "tcomb-form-native": "^0.6.20"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

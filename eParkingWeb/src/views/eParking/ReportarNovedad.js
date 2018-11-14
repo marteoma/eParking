@@ -122,9 +122,12 @@ class ReportarNovedad extends Component {
                 />
               </FormControl>
               <FormControl margin="normal" required fullWidth>
-                <label for="textarea" class="mdc-floating-label">
+                {/* <label for="textarea" class="mdc-floating-label">
                   Descripcion de la novedad
-                </label>
+                </label> */}
+                <Typography component="h3" variant="h5">
+                  Descripción de la novedad
+                </Typography>
                 <textarea
                   id="novedad"
                   name="novedad"

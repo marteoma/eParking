@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  Alert,
-  Button,
-  TouchableHighlight
-} from "react-native";
+import { View, StyleSheet, Text, TouchableHighlight } from "react-native";
 import constantes from "../api/constants";
 import axios from "axios";
 import t from "tcomb-form-native";

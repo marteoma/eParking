@@ -9,32 +9,8 @@ import {
   TouchableOpacity
 } from "react-native";
 import CeldaItem from "./CeldaItem";
-import { setJSExceptionHandler } from "react-native-exception-handler";
 import constantes from "../api/constants";
 import axios from "axios";
-
-const exceptionhandler = (error, isFatal) => {
-  if (isFatal) {
-    Alert.alert(
-      "Unexpected error occurred",
-      `
-        Error: ${isFatal ? "Fatal:" : ""} ${e.name} ${e.message}
-        We will need to restart the app.
-        `,
-      [
-        {
-          text: "Restart",
-          onPress: () => {
-            RNRestart.Restart();
-          }
-        }
-      ]
-    );
-  } else {
-    Alert.alert("No se encontraron celdas disponibles");
-  }
-};
-setJSExceptionHandler(exceptionhandler, false);
 
 export default class CeldasView extends Component {
   constructor(props) {

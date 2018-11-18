@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text, TouchableHighlight } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableHighlight,
+  Alert
+} from "react-native";
 import constantes from "../api/constants";
 import axios from "axios";
 import t from "tcomb-form-native";
@@ -36,9 +42,11 @@ export default class ReservarForm extends Component {
         .post(`${constantes.apiUrl}/reserva`, post)
         .then(result => {
           console.log("WORKED", result.data);
+          Alert.alert("Reserva exitosa");
+          navigation.navigate("Zonas");
         })
         .catch(err => {
-          console.error(err);
+          Alert.alert("Ha ocurrido un error", err);
         });
     }
   };

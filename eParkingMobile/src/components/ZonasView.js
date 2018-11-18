@@ -27,7 +27,7 @@ export default class ZonasView extends Component {
         });
       })
       .catch(error => {
-        console.error(error);
+        Alert.alert("Ha ocurrido un error");
       });
   }
 

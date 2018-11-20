@@ -13,6 +13,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import KEY from "./config";
+import Select from "@material-ui/core/Select";
 
 const styles = theme => ({
   layout: {
@@ -80,6 +81,7 @@ class ReportarNovedad extends Component {
       novedad: "",
       zonas: [],
       celdas: [],
+      id: "",
       open: false
     };
 
@@ -127,6 +129,8 @@ class ReportarNovedad extends Component {
     });
   }
 
+  getCeldas() {}
+
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value
@@ -166,8 +170,8 @@ class ReportarNovedad extends Component {
                   id="zona1"
                   select
                   className={classes.textField}
-                  value={this.state.zonas}
-                  onChange={this.handleChange("zonas")}
+                  value={this.state.zona}
+                  onChange={this.handleChange("zona")}
                   SelectProps={{
                     MenuProps: {
                       className: classes.menu
@@ -176,7 +180,7 @@ class ReportarNovedad extends Component {
                   helperText="Zona*"
                 >
                   {this.state.zonas.map(option => (
-                    <MenuItem key={option.ubicacion} value={option.ubicacion}>
+                    <MenuItem key={option._id} value={option._id}>
                       {option.ubicacion}
                     </MenuItem>
                   ))}
@@ -191,25 +195,27 @@ class ReportarNovedad extends Component {
                   value={this.state.celda}
                   onChange={e => this.setState({ celda: e.target.value })}
                 /> */}
-                {/* <TextField
+                {
+                  <TextField
                     id="celda1"
                     select
                     className={classes.textField}
-                    value={this.state.celdas}
-                    onChange={this.handleChange('celdas')}
+                    value={this.state.celda}
+                    onChange={this.handleChange("celda")}
                     SelectProps={{
                       MenuProps: {
-                        className: classes.menu,
-                      },
+                        className: classes.menu
+                      }
                     }}
                     helperText="Celda*"
                   >
                     {this.state.celdas.map(option => (
-                      <MenuItem  value={option.ubicacion}>
-                        {option.ubicacion}
+                      <MenuItem key={option.codigo} value={option.codigo}>
+                        {option.codigo}
                       </MenuItem>
                     ))}
-                </TextField> */}
+                  </TextField>
+                }
               </FormControl>
               <FormControl margin="normal" required fullWidth>
                 <Typography component="h5" variant="h5">

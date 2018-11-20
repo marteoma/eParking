@@ -21,6 +21,7 @@ class VerZonas extends Component {
 
   componentDidMount() {
     this.getZonas();
+    console.log(this.state.zonas);
   }
 
   getZonas() {

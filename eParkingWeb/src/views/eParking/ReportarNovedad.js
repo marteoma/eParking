@@ -10,6 +10,8 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Snackbar from "@material-ui/core/Snackbar";
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 import KEY from "./config";
 
 const styles = theme => ({
@@ -42,8 +44,31 @@ const styles = theme => ({
   },
   submit: {
     marginTop: theme.spacing.unit * 3
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200
   }
 });
+const currencies = [
+  {
+    value: "USD",
+    label: "$"
+  },
+  {
+    value: "EUR",
+    label: "€"
+  },
+  {
+    value: "BTC",
+    label: "฿"
+  },
+  {
+    value: "JPY",
+    label: "¥"
+  }
+];
 
 class ReportarNovedad extends Component {
   constructor(props) {
@@ -53,11 +78,18 @@ class ReportarNovedad extends Component {
       zona: "",
       celda: "",
       novedad: "",
+      zonas: [],
+      celdas: [],
       open: false
     };
 
+    this.getZonas = this.getZonas.bind(this);
     this.crearNovedad = this.crearNovedad.bind(this);
     this.handleClose = this.handleClose.bind(this);
+  }
+  componentDidMount() {
+    this.getZonas();
+    console.log(this.state.zonas);
   }
 
   handleClose() {
@@ -85,6 +117,22 @@ class ReportarNovedad extends Component {
       });
   }
 
+  getZonas() {
+    axios.get(`${KEY.apiURL}/zona/all`).then(res => {
+      const { data } = res;
+
+      this.setState({
+        zonas: data
+      });
+    });
+  }
+
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -104,28 +152,69 @@ class ReportarNovedad extends Component {
             </Typography>
             <form className={classes.form}>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="zona">Zona</InputLabel>
-                <Input
+                {/* <InputLabel htmlFor="zona">Zona</InputLabel> */}
+                {/* <Input
                   id="zona"
                   name="zona"
                   autoFocus
                   value={this.state.zona}
                   onChange={e => this.setState({ zona: e.target.value })}
-                />
+                
+                /> */}
+
+                <TextField
+                  id="zona1"
+                  select
+                  className={classes.textField}
+                  value={this.state.zonas}
+                  onChange={this.handleChange("zonas")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  helperText="Zona*"
+                >
+                  {this.state.zonas.map(option => (
+                    <MenuItem key={option.ubicacion} value={option.ubicacion}>
+                      {option.ubicacion}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </FormControl>
+
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="celda">Celda</InputLabel>
-                <Input
+                {/* <InputLabel htmlFor="celda">Celda</InputLabel> */}
+                {/* <Input
                   id="celda"
                   name="celda"
                   value={this.state.celda}
                   onChange={e => this.setState({ celda: e.target.value })}
-                />
+                /> */}
+                {/* <TextField
+                    id="celda1"
+                    select
+                    className={classes.textField}
+                    value={this.state.celdas}
+                    onChange={this.handleChange('celdas')}
+                    SelectProps={{
+                      MenuProps: {
+                        className: classes.menu,
+                      },
+                    }}
+                    helperText="Celda*"
+                  >
+                    {this.state.celdas.map(option => (
+                      <MenuItem  value={option.ubicacion}>
+                        {option.ubicacion}
+                      </MenuItem>
+                    ))}
+                </TextField> */}
               </FormControl>
               <FormControl margin="normal" required fullWidth>
-                <label for="textarea" class="mdc-floating-label">
+                <Typography component="h5" variant="h5">
                   Descripcion de la novedad
-                </label>
+                </Typography>
                 <textarea
                   id="novedad"
                   name="novedad"

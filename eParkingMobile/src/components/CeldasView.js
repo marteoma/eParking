@@ -37,10 +37,14 @@ export default class CeldasView extends Component {
       });
   }
 
-  _onPressButton(celda) {
-    const { navigation } = this.props;
-    const zona = navigation.getParam("zona", "NO-ID");
-    navigation.navigate("Reservar", { zona, celda });
+  _onPressButton(celda, estado) {
+    if (estado === "disponible") {
+      const { navigation } = this.props;
+      const zona = navigation.getParam("zona", "NO-ID");
+      navigation.navigate("Reservar", { zona, celda });
+    } else {
+      Alert.alert("La celda no está disponible para reservar");
+    }
   }
 
   static navigationOptions = {
@@ -62,7 +66,7 @@ export default class CeldasView extends Component {
           data={this.state.dataSource}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => this._onPressButton(item.codigo)}
+              onPress={() => this._onPressButton(item.codigo, item.estado)}
               underlayColor="white"
             >
               <CeldaItem celda={item} />

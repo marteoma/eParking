@@ -1,13 +1,6 @@
 import React, { Component } from "react";
-import {
-  View,
-  FlatList,
-  ActivityIndicator,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity
-} from "react-native";
-import ZonaItem from "./ZonaItem";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { MapView } from "expo";
 import constantes from "../api/constants";
 import axios from "axios";
 
@@ -18,12 +11,20 @@ export default class ZonasView extends Component {
   }
 
   componentDidMount() {
+    this.fetchMarkerData();
+  }
+
+  static navigationOptions = {
+    title: "Zonas"
+  };
+
+  fetchMarkerData() {
     return axios
       .get(`${constantes.apiUrl}/zona/all`)
       .then(response => {
         this.setState({
           isLoading: false,
-          dataSource: response.data
+          markers: response.data
         });
       })
       .catch(error => {
@@ -31,13 +32,9 @@ export default class ZonasView extends Component {
       });
   }
 
-  _onPressButton(zona) {
+  onPress(zona) {
     this.props.navigation.navigate("Celdas", { zona });
   }
-
-  static navigationOptions = {
-    title: "Zonas"
-  };
 
   render() {
     if (this.state.isLoading) {
@@ -49,27 +46,40 @@ export default class ZonasView extends Component {
     }
 
     return (
-      <ScrollView style={styles.container}>
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => this._onPressButton(item.nombre)}
-              underlayColor="white"
-            >
-              <ZonaItem zona={item} />
-            </TouchableOpacity>
-          )}
-          keyExtractor={item => item._id}
-        />
-      </ScrollView>
+      <MapView
+        style={{ flex: 1 }}
+        region={{
+          latitude: 6.246219,
+          longitude: -75.573044,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+        }}
+      >
+        {this.state.isLoading
+          ? null
+          : this.state.markers.map((marker, index) => {
+              const coords = {
+                latitude: marker.lat,
+                longitude: marker.lon
+              };
+
+              return (
+                <MapView.Marker
+                  key={index}
+                  coordinate={coords}
+                  title={marker.nombre.toUpperCase().replace(/_/g, " ")}
+                  description={marker.ubicacion}
+                  onPress={() => this.onPress(marker.nombre)}
+                />
+              );
+            })}
+      </MapView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: "#F5FCFF"
   }
 });

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   item_sub: {
-    color: "#AAA",
+    color: "#000",
     fontSize: 15,
     textAlign: "center"
   },
@@ -42,15 +42,15 @@ const styles = StyleSheet.create({
     margin: 2
   },
   reservado: {
-    backgroundColor: "#F11"
+    backgroundColor: "#cf0a29"
   },
   disponible: {
-    backgroundColor: "#2F1"
+    backgroundColor: "#25b200"
   },
   ocupado: {
-    backgroundColor: "#31F"
+    backgroundColor: "#7802ee"
   },
   novedad: {
-    backgroundColor: "#FE1"
+    backgroundColor: "#efdb00"
   }
 });

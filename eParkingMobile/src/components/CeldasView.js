@@ -9,32 +9,8 @@ import {
   TouchableOpacity
 } from "react-native";
 import CeldaItem from "./CeldaItem";
-import { setJSExceptionHandler } from "react-native-exception-handler";
 import constantes from "../api/constants";
 import axios from "axios";
-
-const exceptionhandler = (error, isFatal) => {
-  if (isFatal) {
-    Alert.alert(
-      "Unexpected error occurred",
-      `
-        Error: ${isFatal ? "Fatal:" : ""} ${e.name} ${e.message}
-        We will need to restart the app.
-        `,
-      [
-        {
-          text: "Restart",
-          onPress: () => {
-            RNRestart.Restart();
-          }
-        }
-      ]
-    );
-  } else {
-    Alert.alert("No se encontraron celdas disponibles");
-  }
-};
-setJSExceptionHandler(exceptionhandler, false);
 
 export default class CeldasView extends Component {
   constructor(props) {
@@ -56,14 +32,19 @@ export default class CeldasView extends Component {
         });
       })
       .catch(error => {
-        console.error(error);
+        Alert.alert("No hay celdas");
+        navigation.navigate("Zonas");
       });
   }
 
-  _onPressButton(celda) {
-    const { navigation } = this.props;
-    const zona = navigation.getParam("zona", "NO-ID");
-    navigation.navigate("Reservar", { zona, celda });
+  _onPressButton(celda, estado) {
+    if (estado === "disponible") {
+      const { navigation } = this.props;
+      const zona = navigation.getParam("zona", "NO-ID");
+      navigation.navigate("Reservar", { zona, celda });
+    } else {
+      Alert.alert("La celda no está disponible para reservar");
+    }
   }
 
   static navigationOptions = {
@@ -85,7 +66,7 @@ export default class CeldasView extends Component {
           data={this.state.dataSource}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => this._onPressButton(item.codigo)}
+              onPress={() => this._onPressButton(item.codigo, item.estado)}
               underlayColor="white"
             >
               <CeldaItem celda={item} />

@@ -30,7 +30,9 @@ function findById(req, res, next) {
 function create(req, res, next) {
   const newZonaParqueo = new ZonaParqueo({
     nombre: req.body.nombre.toLowerCase().replace(/ /g, "_"),
-    ubicacion: req.body.ubicacion
+    ubicacion: req.body.ubicacion,
+    lat: req.body.lat,
+    lon: req.body.lon
   });
   newZonaParqueo.save((err, zona) => {
     if (err) next(err);

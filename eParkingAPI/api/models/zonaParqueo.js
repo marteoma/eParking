@@ -12,6 +12,14 @@ const ZonaParqueo = new Schema(
     ubicacion: {
       type: String,
       required: true
+    },
+    lat: {
+      type: Number,
+      required: true
+    },
+    lon: {
+      type: Number,
+      required: true
     }
   },
   {

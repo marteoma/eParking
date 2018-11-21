@@ -3,9 +3,8 @@ import {
   View,
   StyleSheet,
   Text,
-  Alert,
-  Button,
-  TouchableHighlight
+  TouchableHighlight,
+  Alert
 } from "react-native";
 import constantes from "../api/constants";
 import axios from "axios";
@@ -43,9 +42,11 @@ export default class ReservarForm extends Component {
         .post(`${constantes.apiUrl}/reserva`, post)
         .then(result => {
           console.log("WORKED", result.data);
+          Alert.alert("Reserva exitosa");
+          navigation.navigate("Zonas");
         })
         .catch(err => {
-          console.error(err);
+          Alert.alert("Ha ocurrido un error", err);
         });
     }
   };

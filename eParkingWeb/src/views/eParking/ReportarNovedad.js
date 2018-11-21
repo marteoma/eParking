@@ -9,7 +9,10 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Snackbar from "@material-ui/core/Snackbar";
+import TextField from "@material-ui/core/TextField";
+import MenuItem from "@material-ui/core/MenuItem";
 import KEY from "./config";
+import Select from "@material-ui/core/Select";
 
 const styles = theme => ({
   layout: {
@@ -41,6 +44,11 @@ const styles = theme => ({
   },
   submit: {
     marginTop: theme.spacing.unit * 3
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200
   }
 });
 
@@ -52,11 +60,18 @@ class ReportarNovedad extends Component {
       zona: "",
       celda: "",
       novedad: "",
+      zonas: [],
+      celdas: [],
       open: false
     };
 
+    this.getZonas = this.getZonas.bind(this);
+    this.getCeldas = this.getCeldas.bind(this);
     this.crearNovedad = this.crearNovedad.bind(this);
     this.handleClose = this.handleClose.bind(this);
+  }
+  componentDidMount() {
+    this.getZonas();
   }
 
   handleClose() {
@@ -84,6 +99,32 @@ class ReportarNovedad extends Component {
       });
   }
 
+  getZonas() {
+    axios.get(`${KEY.apiURL}/zona/all`).then(res => {
+      const { data } = res;
+
+      this.setState({
+        zonas: data
+      });
+    });
+  }
+
+  getCeldas(nameZona) {
+    axios.get(`${KEY.apiURL}/zona/celdas/all?nombre=${nameZona}`).then(res => {
+      const { data } = res;
+
+      this.setState({
+        celdas: data
+      });
+    });
+  }
+
+  handleChange = name => event => {
+    this.setState({
+      [name]: event.target.value
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -103,30 +144,56 @@ class ReportarNovedad extends Component {
             </Typography>
             <form className={classes.form}>
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="zona">Zona</InputLabel>
-                <Input
+                <TextField
                   id="zona"
-                  name="zona"
-                  autoFocus
+                  select
+                  className={classes.textField}
                   value={this.state.zona}
-                  onChange={e => this.setState({ zona: e.target.value })}
-                />
+                  onChange={this.handleChange("zona")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  helperText="Zona*"
+                >
+                  {this.state.zonas.map(option => (
+                    <MenuItem
+                      key={option.nombre}
+                      value={option.nombre}
+                      onClick={this.getCeldas(this.state.zona)}
+                    >
+                      {option.nombre.toUpperCase().replace(/_/g, " ")}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </FormControl>
+
               <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="celda">Celda</InputLabel>
-                <Input
+                <TextField
                   id="celda"
-                  name="celda"
+                  select
+                  className={classes.textField}
                   value={this.state.celda}
-                  onChange={e => this.setState({ celda: e.target.value })}
-                />
+                  onChange={this.handleChange("celda")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  helperText="Celda*"
+                >
+                  {this.state.celdas.map(option => (
+                    <MenuItem key={option.codigo} value={option.codigo}>
+                      {option.codigo}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </FormControl>
+
               <FormControl margin="normal" required fullWidth>
-                {/* <label for="textarea" class="mdc-floating-label">
+                <Typography component="h5" variant="h5">
                   Descripcion de la novedad
-                </label> */}
-                <Typography component="h3" variant="h5">
-                  Descripción de la novedad
                 </Typography>
                 <textarea
                   id="novedad"

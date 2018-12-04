@@ -15,6 +15,10 @@ const Novedad = new Schema({
     type: Date,
     required: true,
     default: Date.now
+  },
+  tipo: {
+    type: String,
+    enum: ["accidente", "reparacion", "zona cerrada"]
   }
 });
 

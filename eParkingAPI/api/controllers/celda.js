@@ -128,7 +128,8 @@ function changeNovedad(req, res, next) {
     .then(id => {
       let query = { zona: id, codigo: req.body.nombre };
       let novedad = {
-        descripcion: req.body.descripcion
+        descripcion: req.body.descripcion,
+        tipo: req.body.tipo
       };
       Celda.findOneAndUpdate(
         query,

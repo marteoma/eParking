@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import constantes from "../api/constants";
 import axios from "axios";
+import { Notifications, Constants, Permissions } from "expo";
 import t from "tcomb-form-native";
 
 const Form = t.form.Form;
@@ -24,6 +25,13 @@ export default class ReservarForm extends Component {
   static navigationOptions = {
     title: "Reservar"
   };
+
+  async componentDidMount() {
+    let result = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (Constants.lisDevice && result.status === "granted") {
+      console.log("Notification permissions granted.");
+    }
+  }
 
   handleSubmit = () => {
     const { navigation } = this.props;
@@ -43,6 +51,24 @@ export default class ReservarForm extends Component {
         .then(result => {
           console.log("WORKED", result.data);
           Alert.alert("Reserva exitosa");
+
+          let notification = {
+            title: "Reserva Pendiente",
+            body: "El tiempo de tu reserva está a punto de terminar",
+            ios: {
+              sound: true
+            },
+            android: {
+              sound: true,
+              priority: "high", // (optional) (min | low | high | max)
+              vibrate: true
+            }
+          };
+          let schedule = {
+            time: new Date().getTime() + 10000
+          };
+          Notifications.scheduleLocalNotificationAsync(notification, schedule);
+
           navigation.navigate("Zonas");
         })
         .catch(err => {

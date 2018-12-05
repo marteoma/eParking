@@ -216,7 +216,7 @@ class ReportarNovedad extends Component {
                       className: classes.menu
                     }
                   }}
-                  helperText="Tipo novedad*"
+                  helperText="Tipo de novedad*"
                 >
                   {novedades.map(option => (
                     <MenuItem key={option.value} value={option.value}>
@@ -227,7 +227,7 @@ class ReportarNovedad extends Component {
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
-                <Typography component="h5" variant="h5">
+                <Typography component="h6" variant="h6">
                   Descripcion de la novedad
                 </Typography>
                 <textarea

@@ -3,13 +3,10 @@ import axios from "axios";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Snackbar from "@material-ui/core/Snackbar";
-import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import KEY from "./config";
 import Select from "@material-ui/core/Select";
@@ -84,8 +81,13 @@ class ReportarNovedad extends Component {
     this.crearNovedad = this.crearNovedad.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
+
   componentDidMount() {
     this.getZonas();
+  }
+
+  componentDidUpdate() {
+    this.getCeldas();
   }
 
   handleClose() {
@@ -124,14 +126,21 @@ class ReportarNovedad extends Component {
     });
   }
 
-  getCeldas(nameZona) {
-    axios.get(`${KEY.apiURL}/zona/celdas/all?nombre=${nameZona}`).then(res => {
-      const { data } = res;
+  getCeldas() {
+    axios
+      .get(`${KEY.apiURL}/zona/celdas/all?nombre=${this.state.zona}`)
+      .then(res => {
+        const { data } = res;
 
-      this.setState({
-        celdas: data
+        this.setState({
+          celdas: data
+        });
+      })
+      .catch(err => {
+        this.setState({
+          celdas: []
+        });
       });
-    });
   }
 
   handleChange = name => event => {
@@ -159,51 +168,35 @@ class ReportarNovedad extends Component {
             </Typography>
             <form className={classes.form}>
               <FormControl margin="normal" required fullWidth>
-                <TextField
-                  id="zona"
-                  select
-                  className={classes.textField}
+                <Select
                   value={this.state.zona}
                   onChange={this.handleChange("zona")}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes.menu
-                    }
-                  }}
-                  helperText="Zona*"
+                  name="zona"
+                  displayEmpty
+                  className={classes.selectEmpty}
                 >
-                  {this.state.zonas.map(option => (
-                    <MenuItem
-                      key={option.nombre}
-                      value={option.nombre}
-                      onClick={this.getCeldas(this.state.zona)}
-                    >
-                      {option.nombre.toUpperCase().replace(/_/g, " ")}
+                  {this.state.zonas.map(zona => (
+                    <MenuItem value={zona.nombre} key={zona._id}>
+                      {zona.nombre.toUpperCase().replace(/_/g, " ")}
                     </MenuItem>
                   ))}
-                </TextField>
+                </Select>
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
-                <TextField
-                  id="celda"
-                  select
-                  className={classes.textField}
+                <Select
                   value={this.state.celda}
                   onChange={this.handleChange("celda")}
-                  SelectProps={{
-                    MenuProps: {
-                      className: classes.menu
-                    }
-                  }}
-                  helperText="Celda*"
+                  name="celda"
+                  displayEmpty
+                  className={classes.selectEmpty}
                 >
-                  {this.state.celdas.map(option => (
-                    <MenuItem key={option.codigo} value={option.codigo}>
-                      {option.codigo}
+                  {this.state.celdas.map(zona => (
+                    <MenuItem value={zona.codigo} key={zona._id}>
+                      {zona.codigo}
                     </MenuItem>
                   ))}
-                </TextField>
+                </Select>
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>

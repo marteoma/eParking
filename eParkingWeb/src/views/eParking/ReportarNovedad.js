@@ -51,7 +51,20 @@ const styles = theme => ({
     width: 200
   }
 });
-
+const novedades = [
+  {
+    value: 0,
+    label: "accidente"
+  },
+  {
+    value: 1,
+    label: "reparacion"
+  },
+  {
+    value: 2,
+    label: "zona cerrada"
+  }
+];
 class ReportarNovedad extends Component {
   constructor(props) {
     super(props);
@@ -62,6 +75,7 @@ class ReportarNovedad extends Component {
       novedad: "",
       zonas: [],
       celdas: [],
+      tipoNovedad: "",
       open: false
     };
 
@@ -94,6 +108,7 @@ class ReportarNovedad extends Component {
           zona: "",
           celda: "",
           novedad: "",
+          tipoNovedad: "",
           open: true
         });
       });
@@ -192,6 +207,28 @@ class ReportarNovedad extends Component {
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
+                <TextField
+                  id="tipoNovedad"
+                  select
+                  className={classes.textField}
+                  value={this.state.tipoNovedad}
+                  onChange={this.handleChange("tipoNovedad")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  helperText="Tipo novedad*"
+                >
+                  {novedades.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </FormControl>
+
+              <FormControl margin="normal" required fullWidth>
                 <Typography component="h5" variant="h5">
                   Descripcion de la novedad
                 </Typography>
@@ -205,6 +242,7 @@ class ReportarNovedad extends Component {
                   cols="40"
                 />
               </FormControl>
+
               <Button
                 type="button"
                 fullWidth

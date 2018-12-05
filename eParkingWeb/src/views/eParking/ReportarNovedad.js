@@ -10,6 +10,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MenuItem from "@material-ui/core/MenuItem";
 import KEY from "./config";
 import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
+import { FormHelperText } from "@material-ui/core";
 
 const styles = theme => ({
   layout: {
@@ -48,7 +50,20 @@ const styles = theme => ({
     width: 200
   }
 });
-
+const novedades = [
+  {
+    value: "Accidente",
+    label: "Accidente"
+  },
+  {
+    value: "Reparacion",
+    label: "Reparacion"
+  },
+  {
+    value: "Zona cerrada",
+    label: "Zona cerrada"
+  }
+];
 class ReportarNovedad extends Component {
   constructor(props) {
     super(props);
@@ -59,6 +74,7 @@ class ReportarNovedad extends Component {
       novedad: "",
       zonas: [],
       celdas: [],
+      tipoNovedad: "",
       open: false
     };
 
@@ -89,13 +105,15 @@ class ReportarNovedad extends Component {
       .put(`${KEY.apiURL}/novedad/`, {
         zona: this.state.zona,
         nombre: this.state.celda,
-        descripcion: this.state.novedad
+        descripcion: this.state.novedad,
+        tipo: this.state.tipoNovedad
       })
       .then(res => {
         thisComponent.setState({
           zona: "",
           celda: "",
           novedad: "",
+          tipoNovedad: "",
           open: true
         });
       });
@@ -166,6 +184,7 @@ class ReportarNovedad extends Component {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>Zona*</FormHelperText>
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
@@ -176,12 +195,35 @@ class ReportarNovedad extends Component {
                   displayEmpty
                   className={classes.selectEmpty}
                 >
-                  {this.state.celdas.map(zona => (
-                    <MenuItem value={zona.codigo} key={zona._id}>
-                      {zona.codigo}
+                  {this.state.celdas.map(celda => (
+                    <MenuItem value={celda.codigo} key={celda._id}>
+                      {celda.codigo}
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>Celda*</FormHelperText>
+              </FormControl>
+
+              <FormControl margin="normal" required fullWidth>
+                <TextField
+                  id="tipoNovedad"
+                  select
+                  className={classes.textField}
+                  value={this.state.tipoNovedad}
+                  onChange={this.handleChange("tipoNovedad")}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu
+                    }
+                  }}
+                  helperText="Tipo novedad*"
+                >
+                  {novedades.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
@@ -198,6 +240,7 @@ class ReportarNovedad extends Component {
                   cols="40"
                 />
               </FormControl>
+
               <Button
                 type="button"
                 fullWidth

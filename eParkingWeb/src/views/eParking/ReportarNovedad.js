@@ -10,6 +10,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MenuItem from "@material-ui/core/MenuItem";
 import KEY from "./config";
 import Select from "@material-ui/core/Select";
+import TextField from "@material-ui/core/TextField";
+import { FormHelperText } from "@material-ui/core";
 
 const styles = theme => ({
   layout: {
@@ -50,16 +52,16 @@ const styles = theme => ({
 });
 const novedades = [
   {
-    value: 0,
-    label: "accidente"
+    value: "Accidente",
+    label: "Accidente"
   },
   {
-    value: 1,
-    label: "reparacion"
+    value: "Reparacion",
+    label: "Reparacion"
   },
   {
-    value: 2,
-    label: "zona cerrada"
+    value: "Zona cerrada",
+    label: "Zona cerrada"
   }
 ];
 class ReportarNovedad extends Component {
@@ -103,7 +105,8 @@ class ReportarNovedad extends Component {
       .put(`${KEY.apiURL}/novedad/`, {
         zona: this.state.zona,
         nombre: this.state.celda,
-        descripcion: this.state.novedad
+        descripcion: this.state.novedad,
+        tipo: this.state.tipoNovedad
       })
       .then(res => {
         thisComponent.setState({
@@ -181,6 +184,7 @@ class ReportarNovedad extends Component {
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>Zona*</FormHelperText>
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
@@ -191,12 +195,13 @@ class ReportarNovedad extends Component {
                   displayEmpty
                   className={classes.selectEmpty}
                 >
-                  {this.state.celdas.map(zona => (
-                    <MenuItem value={zona.codigo} key={zona._id}>
-                      {zona.codigo}
+                  {this.state.celdas.map(celda => (
+                    <MenuItem value={celda.codigo} key={celda._id}>
+                      {celda.codigo}
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>Celda*</FormHelperText>
               </FormControl>
 
               <FormControl margin="normal" required fullWidth>
